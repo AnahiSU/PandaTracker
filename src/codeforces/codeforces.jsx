@@ -1,28 +1,23 @@
 import { useEffect, useState } from "react";
 import DivGrid from "./divGrid";
 
-function ContestsGrid({divView, username}) {
+function ContestsGrid({divView}) {
     const [divisions, setDivisions] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const [contestRes, problemRes, userRes] = await Promise.all([
                     fetch("https://codeforces.com/api/contest.list"),
-                    fetch("https://codeforces.com/api/problemset.problems"),
-                    username != "" ? fetch(`https://codeforces.com/api/user.status?handle=${username}&from=1`) : [],
-
+                    fetch("https://codeforces.com/api/problemset.problems")
                 ]);
 
                 const contestData = await contestRes.json();
                 const problemData = await problemRes.json();
-                userData = [];
-                if(username != ""){
-                    userData = await userRes.json();
-                    userData = userData.filter(submission => submission.veredict === "OK");
-                }
                 
+                console.log("data;" )
                 if (contestData.status === "OK" && problemData.status === "OK") {
                     const contests = contestData.result.filter(c => c.phase === "FINISHED");
                     const problems = problemData.result.problems;
@@ -53,7 +48,6 @@ function ContestsGrid({divView, username}) {
                                 .map(p => ({
                                     ...p,
                                     link: `https://codeforces.com/problemset/problem/${p.contestId}/${p.index}`,
-                                    statusUser:  userData.includes(name) ? true: false,
                                 }));
                             
                             divisions[div].push({
