@@ -1,6 +1,6 @@
-function DivGrid({contests}){
-    console.log("contests: " + contests);
-    return(
+function DivGrid({ contests, statusMap }) {
+
+    return (
         <table className="border-collapse table-auto border-black-300 border-serparate border-3 border-spacing-2 mx-4">
             <thead>
                 <tr>
@@ -18,16 +18,18 @@ function DivGrid({contests}){
                 </tr>
             </thead>
             <tbody>
-                { contests.map((contest) => (       
+                {contests.map((contest) => (
                     <tr>
                         <td className="border-3 border-black-300 px-2 py-1 text-sm">{contest.name}</td>
-                        
+
                         {Array.from({ length: 10 }).map((_, idx) => (
-                            <td className="border-2 border-black-300 px-2 py-1 text-sm">
-                                { contest.problems && contest.problems[idx] ?
-                                <a href={contest.problems[idx].link} target="_blank" className=" underline">
-                                    {contest.problems[idx].index}. {contest.problems[idx].name}
-                                </a> : '-'}
+                            <td className={`border-2 border-black-300 px-2 py-1 text-sm ${statusMap[`${contest.id}${contest.problems[idx]?.index}`] === "OK"
+                                    ? "bg-green-200"
+                                    : ""}`}>
+                                {contest.problems && contest.problems[idx] ?
+                                    <a href={contest.problems[idx].link} target="_blank" className=" underline">
+                                        {contest.problems[idx].index}. {contest.problems[idx].name}
+                                    </a> : '-'}
                             </td>
                         ))}
                     </tr>
